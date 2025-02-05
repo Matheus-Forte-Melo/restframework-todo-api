@@ -1,0 +1,9 @@
+-> Anotações do Projeto:
+
+-A ui vai ser em CLI, provavelmente usando aquela biblioteca de interface.
+-Mas o foco vai ser em desenvolver a API primeiro. Sem operações no front, deixar o back TOTALMENTE pra API, 
+    vai ser a primeira vez que eu vou fazer algo tão isolado do tipo
+-> Continuar fazendo assim que bater vontade. Ver melhor forma de atualizar as entradas, impor restricoes de usuario e criar interface simples. Depois, pensar, se der, fora de casa. 
+
+dado isso, declaro o fim da minha jornada em aprender python, vou migrar pra JAVA, aprender a sintaxe e meter o louco. Ocasionalmente fazendo alguns leetcode de python, talvez eu até devesse ter uma rotina de revisar um leetcode por dia + fazer um leetcode por dia.
+
