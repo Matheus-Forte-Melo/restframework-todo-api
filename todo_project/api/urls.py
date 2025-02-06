@@ -2,6 +2,8 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    path("get_entradas_lista/<int:pk>/", views.get_entradas_lista, name="get_entradas_lista"),
+    path("get_listas_usuario/<int:pk>/", views.get_listas_usuario, name="get_listas_usuario"),
     path("get_full_listas/", views.get_full_listas, name="get_full_listas"),
     path("get_all_listas/", views.get_all_listas, name="get_all_listas"),
     path("register/", views.register_user, name="register_user"),
