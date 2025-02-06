@@ -18,6 +18,9 @@ def nao_tem_permissao(request, id_alternativo=None) -> bool:
         
 @api_view(["GET"])
 def get_listas_usuario(request, pk):
+    """
+    Pega todas as listas conforme o id do usuário informado
+    """
     try:
         user = User.objects.get(id=pk)
         if nao_tem_permissao(request, user.id):
@@ -31,6 +34,9 @@ def get_listas_usuario(request, pk):
     
 @api_view(["GET"])
 def get_entradas_lista(request, pk):
+    """
+    Pega todas as entradas conforme o id da lista informado
+    """
     try:
         entradas = Entrada.objects.filter(lista_origem=pk)
     except Entrada.DoesNotExist:
@@ -41,7 +47,9 @@ def get_entradas_lista(request, pk):
 
 @api_view(['GET'])
 def get_full_listas(request):
-
+    """
+    Retorna TODAS as listas com informações mais avançadas. Apenas para superusuarios.
+    """
     if not request.user.is_superuser:
         return Response("Você não tem permissão para isso", status.HTTP_401_UNAUTHORIZED)
 
@@ -51,6 +59,9 @@ def get_full_listas(request):
 
 @api_view(['GET'])
 def get_all_listas(request):
+    """
+    Retorna TODAS as listas com informações basicas. Apenas para superusuarios.
+    """
     if not request.user.is_superuser:
         return Response("Você não tem permissão para isso", status.HTTP_401_UNAUTHORIZED)
     listas = Lista.objects.all()
@@ -60,6 +71,7 @@ def get_all_listas(request):
 @api_view(['POST'])
 def register_user(request):
     """
+    Registra e autentica um usuário.
     Devo revisar essa função. Acho que está com algum erro na hora de criar a senha.
     """
     serializer = serializers.UserSerializer(data=request.data)
@@ -72,6 +84,9 @@ def register_user(request):
 
 @api_view(["POST"])
 def login_user(request):
+    """
+    Faz o login de um usuário, para que possa usar o sistema. (OBRIGATÓRIO, SEM CONTA VOCÊ NÃO PODERÁ FAZER NADA)
+    """
     username = request.data.get("username")
     password = request.data.get("password")
     user = authenticate(request, username=username, password=password)
@@ -84,6 +99,9 @@ def login_user(request):
 
 @api_view(['POST'])
 def criar_lista(request):
+    """
+    Cria uma lista.
+    """
     serializer = serializers.ListaSerializer(data=request.data)
     
     if nao_tem_permissao(request):
@@ -97,6 +115,9 @@ def criar_lista(request):
         
 @api_view(['POST'])
 def deletar_lista(request):
+    """
+    Deleta uma lista e todas suas entradas conforme o ID da lista
+    """
     id_lista = request.data.get("id")
     try:
         # Existe a função adelete, então talvez seja jogo. Talvez nao na verdade, isso nao é algo a ser autenticado
@@ -113,6 +134,9 @@ def deletar_lista(request):
 
 @api_view(['POST'])
 def adicionar_entrada(request):
+    """
+    Adiciona uma entrada a uma lista anteriormente criada pelo usuário.
+    """
     serializer = serializers.EntradaSerializer(data=request.data)
     if serializer.is_valid():
         # Chamo os validated_data invez de data. Pq data ja esta formatado pro BD e nao pode ser alterado.
@@ -127,6 +151,9 @@ def adicionar_entrada(request):
 
 @api_view(['POST'])
 def deletar_entrada(request):
+    """
+    Deleta uma entrada da lista conforme seu ID.
+    """
     id_entrada = request.data.get("id")
     try:
         entrada = Entrada.objects.get(id=id_entrada)
@@ -142,6 +169,10 @@ def deletar_entrada(request):
 
 @api_view(['PATCH'])
 def atualizar_entrada(request):
+    """
+    Atualiza entrada. No momento, o proprietário da entrada pode transferir sua entrada para outra lista. Isso será corrigido
+    assim que eu tiver a paciência de implementar um sistema de autorização melhor.
+    """
     id_entrada = request.data.get("id")
     try:
         entrada = Entrada.objects.get(id=id_entrada)
