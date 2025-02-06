@@ -30,7 +30,6 @@ def get_entradas_lista(request, pk):
         entradas = Entrada.objects.filter(lista_origem=pk)
     except Entrada.DoesNotExist:
         return Response({"erro": "Essa lista não existe."}, status.HTTP_404_NOT_FOUND)
-
     serializer = serializers.EntradaSerializer(entradas, many=True)
 
     return Response(serializer.data, status.HTTP_200_OK)
@@ -77,6 +76,9 @@ def login_user(request):
 @api_view(['POST'])
 def criar_lista(request):
     serializer = serializers.ListaSerializer(data=request.data)
+
+    if not request.user.is_superuser and str(request.user.id) != request.data.get("usuario"):
+        return Response("Você não tem permissão para isso", status.HTTP_401_UNAUTHORIZED)
 
     if serializer.is_valid():
         serializer.save()
@@ -140,24 +142,3 @@ def atualizar_entrada(request):
         return Response(serializer.data)
     
     return Response(serializer.errors, status.HTTP_200_OK)
-
-# @api_view(['PATCH'])
-# def atualizar_entrada(request):
-#     id_entrada = request.data.get("id")
-#     estado = request.data.get("estado").upper()
-
-#     print(estado)
-
-#     if estado not in ["P", "C", "EP"]:
-#         return Response({"erro": "Estado inválido."})
-
-#     try:
-#         entrada = Entrada.objects.get(id=id_entrada)
-#         entrada.estado = estado
-#         entrada.save() 
-#     except Exception:
-#         return Response({"erro": "Entrada inválida!"})
-    
-#     return Response({"mensagem": f"Entrada ({entrada.nome_entrada}) alterada para {estado} com sucesso"})
-
-    
