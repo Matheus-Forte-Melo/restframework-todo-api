@@ -2,16 +2,16 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path("get_entradas_lista/<int:pk>/", views.get_entradas_lista, name="get_entradas_lista"),
-    path("get_listas_usuario/<int:pk>/", views.get_listas_usuario, name="get_listas_usuario"),
-    path("get_full_listas/", views.get_full_listas, name="get_full_listas"),
-    path("get_all_listas/", views.get_all_listas, name="get_all_listas"),
-    path("register/", views.register_user, name="register_user"),
-    path("login/", views.login_user, name="login_user"),
-    path("criar_lista/", views.criar_lista, name="criar_lista"),
-    path("deletar_lista/", views.deletar_lista, name="deletar_lista"),
-    path("adicionar_entrada/", views.adicionar_entrada, name="adicionar_entrada"),
-    path("deletar_entrada/", views.deletar_entrada, name="deletar_entrada"),
-    path("atualizar_entrada/", views.atualizar_entrada, name="atualizar_entrada")
+    path("lista/entradas/pegar/<int:pk>/", views.pegar_entradas_lista, name="pegar_entradas_lista"),
+    path("usuario/lista/pegar/<int:pk>/", views.pegar_listas_usuario, name="pegar_listas_usuario"),
+    path("lista/pegar_listas_inteiras/", views.pegar_listas_inteiras, name="pegar_listas_inteiras"),
+    path("lista/pegar_todas/", views.pegar_listas, name="pegar_listas"),
+    path("usuario/signin/", views.register_user, name="register_user"),
+    path("usuario/login/", views.login_user, name="login_user"),
+    path("lista/criar/", views.criar_lista, name="criar_lista"),
+    path("lista/deletar/", views.deletar_lista, name="deletar_lista"),
+    path("entrada/criar/", views.adicionar_entrada, name="adicionar_entrada"),
+    path("entrada/deletar/", views.deletar_entrada, name="deletar_entrada"),
+    path("entrada/atualizar/", views.atualizar_entrada, name="atualizar_entrada")
     
 ]

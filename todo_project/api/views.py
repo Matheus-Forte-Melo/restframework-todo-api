@@ -17,7 +17,7 @@ def nao_tem_permissao(request, id_alternativo=None) -> bool:
         return not request.user.is_superuser and str(request.user.id) != str(id_alternativo)
         
 @api_view(["GET"])
-def get_listas_usuario(request, pk):
+def pegar_listas_usuario(request, pk):
     """
     Pega todas as listas conforme o id do usuário informado
     """
@@ -33,7 +33,7 @@ def get_listas_usuario(request, pk):
     return Response(serializer.data, status.HTTP_200_OK)
     
 @api_view(["GET"])
-def get_entradas_lista(request, pk):
+def pegar_entradas_lista(request, pk):
     """
     Pega todas as entradas conforme o id da lista informado
     """
@@ -46,7 +46,7 @@ def get_entradas_lista(request, pk):
     return Response(serializer.data, status.HTTP_200_OK)
 
 @api_view(['GET'])
-def get_full_listas(request):
+def pegar_listas_inteiras(request):
     """
     Retorna TODAS as listas com informações mais avançadas. Apenas para superusuarios.
     """
@@ -58,7 +58,7 @@ def get_full_listas(request):
     return Response(serializer.data, status.HTTP_200_OK)
 
 @api_view(['GET'])
-def get_all_listas(request):
+def pegar_listas(request):
     """
     Retorna TODAS as listas com informações basicas. Apenas para superusuarios.
     """
