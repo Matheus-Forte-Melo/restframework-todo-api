@@ -8,12 +8,22 @@ from django.contrib.auth import authenticate, login
 
 from . import serializers
 
-# Create your views here.
-
+# Essa forma de validação NÃO é a recomendada, muita manutenção terá que ser feita caso algo seja mudado.
+# Fiz só porque estou com pressa para aprender novas tecnologias!
+def nao_tem_permissao(request, id_alternativo=None) -> bool:
+    if not id_alternativo:
+        return not request.user.is_superuser and str(request.user.id) != request.data.get("usuario")
+    else:
+        return not request.user.is_superuser and str(request.user.id) != str(id_alternativo)
+        
 @api_view(["GET"])
 def get_listas_usuario(request, pk):
     try:
         user = User.objects.get(id=pk)
+
+        if nao_tem_permissao(request, user.id):
+            return Response("Você não tem permissão para isso", status.HTTP_401_UNAUTHORIZED)
+
         listas = Lista.objects.filter(usuario=user)
         print(user, listas)
     except User.DoesNotExist:
@@ -36,12 +46,20 @@ def get_entradas_lista(request, pk):
 
 @api_view(['GET'])
 def get_full_listas(request):
+
+    if not request.user.is_superuser:
+        return Response("Você não tem permissão para isso", status.HTTP_401_UNAUTHORIZED)
+
     listas = Lista.objects.all()
     serializer = serializers.FullListaSerializer(listas, many=True)
     return Response(serializer.data, status.HTTP_200_OK)
 
 @api_view(['GET'])
 def get_all_listas(request):
+
+    if not request.user.is_superuser:
+        return Response("Você não tem permissão para isso", status.HTTP_401_UNAUTHORIZED)
+
     listas = Lista.objects.all()
     serializer = serializers.ListaSerializer(listas, many=True)
     return Response(serializer.data, status.HTTP_200_OK)
@@ -76,8 +94,8 @@ def login_user(request):
 @api_view(['POST'])
 def criar_lista(request):
     serializer = serializers.ListaSerializer(data=request.data)
-
-    if not request.user.is_superuser and str(request.user.id) != request.data.get("usuario"):
+    
+    if nao_tem_permissao(request):
         return Response("Você não tem permissão para isso", status.HTTP_401_UNAUTHORIZED)
 
     if serializer.is_valid():
@@ -94,6 +112,10 @@ def deletar_lista(request):
     try:
         # Existe a função adelete, então talvez seja jogo. Talvez nao na verdade, isso nao é algo a ser autenticado
         lista = Lista.objects.get(id=id_lista)
+
+        if nao_tem_permissao(request, lista.usuario.id):
+            return Response("Você não tem permissão para isso", status.HTTP_401_UNAUTHORIZED)
+
         lista.delete()   
     except Lista.DoesNotExist:
         return Response({"erro": "Lista inválida!"}, status.HTTP_404_NOT_FOUND)
@@ -107,16 +129,26 @@ def adicionar_entrada(request):
     serializer = serializers.EntradaSerializer(data=request.data)
 
     if serializer.is_valid():
+        # Chamo os validated_data invez de data. Pq data ja esta formatado pro BD e nao pode ser alterado.
+        # Já validated_data é o objeto em si, sem formatação.
+        lista = serializer.validated_data["lista_origem"]
+        if nao_tem_permissao(request, lista.usuario.id):
+            return Response("Você não tem permissão para isso", status.HTTP_401_UNAUTHORIZED)
+
         serializer.save()
         return Response(serializer.data, status.HTTP_201_CREATED)
     return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 def deletar_entrada(request):
+    
     id_entrada = request.data.get("id")
-
     try:
         entrada = Entrada.objects.get(id=id_entrada)
+
+        if nao_tem_permissao(request, entrada.lista_origem.usuario.id):
+            return Response("Você não tem permissão para isso", status.HTTP_401_UNAUTHORIZED)
+
         entrada.delete()   
     except Entrada.DoesNotExist:
         return Response({"erro": "Entrada inválida!"}, status.HTTP_404_NOT_FOUND)
@@ -131,6 +163,11 @@ def atualizar_entrada(request):
 
     try:
         entrada = Entrada.objects.get(id=id_entrada)
+
+        # Um usuário pode setar a origem de sua entrada para outra lista. Assim transfindo-a. Interessante.
+        if nao_tem_permissao(request, entrada.lista_origem.usuario.id):
+            return Response("Você não tem permissão para isso", status.HTTP_401_UNAUTHORIZED)
+
     except Entrada.DoesNotExist:
         return Response({"erro": "Essa entrada não existe"}, status=status.HTTP_404_NOT_FOUND)
 
