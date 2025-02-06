@@ -63,12 +63,14 @@ def register_user(request):
 def login_user(request):
     username = request.data.get("username")
     password = request.data.get("password")
+
     user = authenticate(request, username=username, password=password)
+    serializer = serializers.UserSerializer(user)
 
     if user is not None:
         login(request, user)
-        return Response({"mensagem": "Usuário logado.", "dados": request.data}, status.HTTP_202_ACCEPTED)   
-    return Response({"mensagem": "Senha ou nome de usuário incorretos.", "dados": request.data}, status.HTTP_400_BAD_REQUEST)   
+        return Response({"mensagem": "Usuário logado.", "dados": serializer.data}, status.HTTP_202_ACCEPTED)   
+    return Response({"mensagem": "Senha ou nome de usuário incorretos.", "dados": serializer.data}, status.HTTP_400_BAD_REQUEST)   
 
 # Nota para si: Não usar serializador para autenticar ou logar usuários. Ele meio que já faz o trabalho de autenticação, e eu tava entando fazer DUAS vezes. Pra tirar dados, colocar e atualizar, tudo bem, mas para coisas adversas melhor fazer só com os resquest mesmo.
 
