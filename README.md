@@ -72,28 +72,28 @@ Antes de qualquer operação, é necessário estar autenticado. Você pode **reg
 
 ---
 
-## 📋 Endpoints
+# 📋 Endpoints
 
-### 🗂 Listas
+## 🗂 Listas
 
-#### 📥 Pegar Listas de um Usuário
+### 📥 Pegar Listas de um Usuário
 **Endpoint:** `GET /todo-api/usuario/lista/pegar/<int:pk>/`
 
 📌 **Descrição:** Retorna todas as listas pertencentes a um usuário.
 
 🔒 **Restrição:** Apenas o próprio usuário ou um superusuário pode acessar.
 
-#### 🔍 Pegar Todas as Listas com Informações Avançadas *(Somente Superusuário)*
+### 🔍 Pegar Todas as Listas com Informações Avançadas *(Somente Superusuário)*
 **Endpoint:** `GET /todo-api/lista/pegar_listas_inteiras/`
 
 📌 **Descrição:** Retorna todas as listas com informações adicionais.
 
-#### 📋 Pegar Todas as Listas com Informações Básicas *(Somente Superusuário)*
+### 📋 Pegar Todas as Listas com Informações Básicas *(Somente Superusuário)*
 **Endpoint:** `GET /todo-api/lista/pegar_todas/`
 
 📌 **Descrição:** Retorna todas as listas com informações básicas.
 
-#### ➕ Criar uma Nova Lista
+### ➕ Criar uma Nova Lista
 **Endpoint:** `POST /todo-api/lista/criar/`
 
 📩 **Corpo da requisição:**
@@ -105,7 +105,7 @@ Antes de qualquer operação, é necessário estar autenticado. Você pode **reg
 ```
 🔒 **Restrição:** Apenas o próprio usuário pode criar listas para si, ou um superusuario.
 
-#### ❌ Deletar uma Lista
+### ❌ Deletar uma Lista
 **Endpoint:** `POST /todo-api/lista/deletar/`
 
 📩 **Corpo da requisição:**
@@ -118,14 +118,14 @@ Antes de qualquer operação, é necessário estar autenticado. Você pode **reg
 
 ---
 
-### ✅ Entradas
+## ✅ Entradas
 
-#### 📥 Pegar Entradas de uma Lista
+### 📥 Pegar Entradas de uma Lista
 **Endpoint:** `GET /todo-api/lista/entradas/pegar/<int:pk>/`
 
 📌 **Descrição:** Retorna todas as entradas pertencentes a uma lista.
 
-#### ➕ Adicionar uma Entrada
+### ➕ Adicionar uma Entrada
 **Endpoint:** `POST /todo-api/entrada/criar/`
 
 📩 **Corpo da requisição:**
@@ -138,7 +138,7 @@ Antes de qualquer operação, é necessário estar autenticado. Você pode **reg
 ```
 🔒 **Restrição:** Apenas o dono da lista e superusuarios podem deletar entradas.
 
-#### ✏️ Atualizar uma Entrada
+### ✏️ Atualizar uma Entrada
 **Endpoint:** `PATCH /todo-api/entrada/atualizar/`
 
 📩 **Corpo da requisição:**
@@ -150,7 +150,7 @@ Antes de qualquer operação, é necessário estar autenticado. Você pode **reg
 ```
 🔒 **Restrição:** Apenas o dono da lista e superusuarios podem deletar entradas.
 
-#### ❌ Deletar uma Entrada
+### ❌ Deletar uma Entrada
 **Endpoint:** `POST /todo-api/entrada/deletar/`
 
 📩 **Corpo da requisição:**
