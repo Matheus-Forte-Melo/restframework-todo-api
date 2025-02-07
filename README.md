@@ -3,7 +3,7 @@
 💡 NOTA: Abaixo está uma pequena introdução de como mexer nessa API. Note que ela não está hosteada, então recomendo hosteá-la localmente. Basta rodar o ambiente virtual e dar um ```python manage.py runserver ``` e clicar no link gerado.
 
 
-Além disso, a documentação foi escrita por mim, porém EMBELEZADA por inteligência artificial. Não estava conseguindo formatar de um jeito totalmente compreensível. Sinta-se a vontade para fazer o que quiser com isso aqui.
+Além disso, a documentação foi escrita por mim, porém EMBELEZADA por inteligência artificial, pois não estava totalmente satisfeito com a forma bruta dessa documentação. Sinta-se a vontade para fazer o que quiser com isso aqui!
 
 ## 📖 Introdução
 
