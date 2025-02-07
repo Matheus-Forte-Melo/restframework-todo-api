@@ -101,7 +101,7 @@ Antes de qualquer operação, é necessário estar autenticado. Você pode **reg
   "usuario": 10
 }
 ```
-🔒 **Restrição:** Apenas o próprio usuário pode criar listas para si.
+🔒 **Restrição:** Apenas o próprio usuário pode criar listas para si, ou um superusuario.
 
 #### ❌ Deletar uma Lista
 **Endpoint:** `POST /todo-api/lista/deletar/`
@@ -134,7 +134,7 @@ Antes de qualquer operação, é necessário estar autenticado. Você pode **reg
   "lista_origem": 3
 }
 ```
-🔒 **Restrição:** Apenas o dono da lista pode adicionar entradas.
+🔒 **Restrição:** Apenas o dono da lista e superusuarios podem deletar entradas.
 
 #### ✏️ Atualizar uma Entrada
 **Endpoint:** `PATCH /todo-api/entrada/atualizar/`
@@ -146,7 +146,7 @@ Antes de qualquer operação, é necessário estar autenticado. Você pode **reg
   "estado": "C"
 }
 ```
-🔒 **Restrição:** Apenas o dono da lista pode modificar suas entradas.
+🔒 **Restrição:** Apenas o dono da lista e superusuarios podem deletar entradas.
 
 #### ❌ Deletar uma Entrada
 **Endpoint:** `POST /todo-api/entrada/deletar/`
@@ -157,19 +157,8 @@ Antes de qualquer operação, é necessário estar autenticado. Você pode **reg
   "id": 15
 }
 ```
-🔒 **Restrição:** Apenas o dono da lista pode deletar entradas.
+🔒 **Restrição:** Apenas o dono da lista e superusuarios podem deletar entradas.
 
 ---
 
-## 📌 Considerações Finais
-
-✅ Usuários comuns podem gerenciar apenas suas listas e entradas.
-
-✅ O **superusuário** (`Admin`, `ID: 9`) tem permissão total sobre a API.
-
-✅ **Todas as requisições precisam ser autenticadas.**
-
-✅ Essa documentação cobre todas as funcionalidades da API. Para mais detalhes, explore os endpoints via uma ferramenta como **Postman** ou **cURL**.
-
----
 
