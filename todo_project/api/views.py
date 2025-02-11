@@ -4,6 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from base.models import Entrada, Lista
 from django.contrib.auth.models import User
+from django.contrib.auth.hashers import make_password
 from django.contrib.auth import authenticate, login
 from . import serializers
 
@@ -75,12 +76,17 @@ def register_user(request):
     Registra e autentica um usuário.
     Devo revisar essa função. Acho que está com algum erro na hora de criar a senha.
     """
+    username = request.data.get("username")
+    email = request.data.get("email")
+    password = request.data.get("password")
+ 
     serializer = serializers.UserSerializer(data=request.data)
     
+    # Meio gambiarra, mas estou usando o serializer como um validador de formularios do django base.
     if serializer.is_valid():
-        serializer.save()
-        return Response({"mensagem": f"Usuário {serializer.data["username"]} criado com sucesso."}, status.HTTP_201_CREATED)
-
+        user = User.objects.create_user(username=username, password=password, email=email)
+        user.save()  
+        return Response(serializer.data, status.HTTP_201_CREATED)
     return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
 
 # Pensando em remover, ja existe API_AUTH, então sinceramente nem sei se é necessário
