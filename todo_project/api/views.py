@@ -1,5 +1,6 @@
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from base.models import Entrada, Lista
 from django.contrib.auth.models import User
@@ -99,14 +100,17 @@ def login_user(request):
     return Response({"mensagem": "Senha ou nome de usuário incorretos.", "dados": serializer.data}, status.HTTP_400_BAD_REQUEST)   
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def criar_lista(request):
     """
-    Cria uma lista.
+    Cria uma lista. Ao criada a lista irá se vincular a conta atualmente autenticada.
     """
-    serializer = serializers.ListaSerializer(data=request.data)
-    if not_permit(request):
+    serializer = serializers.ListaSerializer(data=request.data, partial=True)
+    if not_permit(request, request.user.id):
         return Response("Você não tem permissão para isso", status.HTTP_401_UNAUTHORIZED)
+    
     if serializer.is_valid():
+        serializer.validated_data["usuario"] = request.user
         serializer.save()
         return Response(serializer.data, status.HTTP_201_CREATED)
     else:
@@ -114,6 +118,7 @@ def criar_lista(request):
             return Response({"erro": "Usuário inválido. Insira um ID válido."}, status.HTTP_404_NOT_FOUND)
         
 @api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
 def deletar_lista(request, pk):
     """
     Deleta uma lista e todas suas entradas conforme o ID da lista
@@ -132,6 +137,7 @@ def deletar_lista(request, pk):
     return Response({"mensagem": "lista deletada com sucesso"}, status.HTTP_200_OK)
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def adicionar_entrada(request):
     """
     Adiciona uma entrada a uma lista anteriormente criada pelo usuário.
@@ -148,6 +154,7 @@ def adicionar_entrada(request):
     return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
 
 @api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
 def deletar_entrada(request, pk):
     """
     Deleta uma entrada da lista conforme seu ID.
@@ -165,6 +172,7 @@ def deletar_entrada(request, pk):
     return Response({"mensagem": f"Entrada ({entrada.nome_entrada}) deletada com sucesso"}, status.HTTP_200_OK)
 
 @api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
 def atualizar_entrada(request, pk):
     """
     Atualiza entrada. No momento, o proprietário da entrada pode transferir sua entrada para outra lista. Isso será corrigido
