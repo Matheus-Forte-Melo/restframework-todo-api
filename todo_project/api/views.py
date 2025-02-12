@@ -144,17 +144,22 @@ def deletar_lista(request, pk):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def adicionar_entrada(request):
+def adicionar_entrada(request, pk):
     """
     Adiciona uma entrada a uma lista anteriormente criada pelo usuário.
     """
-    serializer = serializers.EntradaSerializer(data=request.data)
+    try:
+        lista = Lista.objects.get(id=pk)
+    except:
+        return Response("Lista não existe", status.HTTP_404_NOT_FOUND)
+
+    serializer = serializers.EntradaSerializer(data=request.data, partial=True)
     if serializer.is_valid():
         # Chamo os validated_data invez de data. Pq data ja esta formatado pro BD e nao pode ser alterado.
         # Já validated_data é o objeto em si, sem formatação.
-        lista = serializer.validated_data["lista_origem"]
         if not_permit(request, lista.usuario.id):
             return Response("Você não tem permissão para isso", status.HTTP_401_UNAUTHORIZED)
+        serializer.validated_data["lista_origem"] = lista
         serializer.save()
         return Response(serializer.data, status.HTTP_201_CREATED)
     return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
