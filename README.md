@@ -144,7 +144,7 @@ Obs: `<int:pk>` deve ser substituido pelo ID da lista que você deseja atrelar e
 ```json
 {
   "nome_entrada": "Minha nova tarefa",
-  "estado": "P", # Os estados devem ser P (Pendente), EP (Em Progresso) e C (Concluído). Colocar qualquer coisa além disso nesse campo resultara em erro.
+  "estado": "P", // Os estados devem ser P (Pendente), EP (Em Progresso) e C (Concluído). Colocar qualquer coisa além disso nesse campo resultara em erro.
 }
 ```
 🔒 **Restrição:** Apenas o dono da lista e superusuários podem adicionar entradas.
@@ -152,16 +152,29 @@ Obs: `<int:pk>` deve ser substituido pelo ID da lista que você deseja atrelar e
 ### ✏️ Atualizar uma Entrada
 **Endpoint:** `PATCH /todo-api/entrada/atualizar/<int:pk>/`
 
+Obs: `<int:pk>` deve ser substituido pelo ID da entrada que você atualizar.
+
 📩 **Corpo da requisição:**
 ```json
 {
   "estado": "C"
 }
 ```
+ou
+```json
+{
+  "nome_entrada": "Entrada Atualizada",
+}
+
+```
+ou a combinação dos dois campos no mesmo POST.
+
 🔒 **Restrição:** Apenas o dono da lista e superusuários podem atualizar entradas.
 
 ### ❌ Deletar uma Entrada
 **Endpoint:** `DELETE /todo-api/entrada/deletar/<int:pk>/`
+
+Obs: `<int:pk>` deve ser substituido pelo ID da entrada que você deseja deletar.
 
 🔒 **Restrição:** Apenas o dono da lista e superusuários podem deletar entradas.
 ✅ **Resposta de sucesso:**
